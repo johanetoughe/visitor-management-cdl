@@ -1,7 +1,8 @@
 <template>
-    <div class="confirmation-container">
-      <div class="confirmation-wrapper">
-        <h2>Confirmation de la visite</h2>
+    <div id="contain">
+      <h1>Badge visiteur</h1>
+      <div id="badge">
+
         <p><strong>Nom :</strong> {{ visitor.name }}</p>
         <p><strong>Téléphone :</strong> {{ visitor.tel }}</p>
         <p><strong>Salle :</strong> {{ visitor.room }}</p>
@@ -10,96 +11,131 @@
         <div class="qr-code">
           <img :src="qrCodeUrl" alt="QR Code" />
         </div>
-        <button @click="goBack">Retour au formulaire</button>
       </div>
+      <div class="button-container">
+      <button @click="goBack">Retour au formulaire</button>
+      <button @click="printBadge">Imprimer le badge</button>
+    </div>
     </div>
   </template>
   
   <script>
-  import QRCode from 'qrcode';
+  import QRCode from "qrcode";
+  import VisitorForm from '../components/VisitorForm.vue';
   
   export default {
     name: "VisitConfirmation",
     data() {
       return {
-        visitor: {},
-        qrCodeUrl: '',
+        visitor: this.$route.query, // Données transmises via la route
+        qrCodeUrl: "", // URL du QR code
       };
     },
-    created() {
-      // Récupère les données du visiteur via la navigation (props ou query)
-      this.visitor = this.$route.query;
-  
-      // Génére le QR code basé sur les informations du visiteur
-      const qrData = JSON.stringify(this.visitor);
-      QRCode.toDataURL(qrData)
-        .then(url => {
-          this.qrCodeUrl = url;
-        })
-        .catch(err => {
-          console.error(err);
-        });
-    },
     methods: {
-      goBack() {
-        this.$router.push('/');
+      async generateQRCode() {
+        // Génération du QR code à partir des données du visiteur
+        const qrData = JSON.stringify(this.visitor);
+        this.qrCodeUrl = await QRCode.toDataURL(qrData);
       },
+      printBadge() {
+        // Préparer le contenu pour l'impression
+        const badge = document.getElementById("badge");
+        const printWindow = window.open("", "_blank");
+        printWindow.document.write(`
+          <html>
+            <head>
+              <title>Badge de visite</title>
+              <style>
+                @page {
+                  size: 80mm auto; /* Largeur 80mm, hauteur ajustée */
+                  margin: 0;
+                }
+                body {
+                  font-family: Arial, sans-serif;
+                  font-size: 12px;
+                  width: 80mm;
+                  margin: 0;
+                
+                  text-align: center;
+                }
+                #badge {
+                  display: flex;
+                  flex-direction: column;
+                  align-items: center;
+                  text-align: center; 
+                }
+                .qr-code img {
+                  max-width: 45mm;
+                  margin: 10px 0;
+                }
+                p {
+                  margin: 5px 0;
+                }
+                strong {
+                  font-weight: bold;
+                }
+              </style>
+            </head>
+            <body>${badge.innerHTML}</body>
+          </html>
+        `);
+        printWindow.document.close();
+        printWindow.focus();
+        printWindow.print();
+        printWindow.close();
+      },
+      // Méthode pour revenir au formulaire
+    goBack() {
+      this.$router.push({ name: 'VisitorForm' }); // 'visitorForm' est le nom de la route du formulaire
+    },
+    },
+    async mounted() {
+      await this.generateQRCode();
     },
   };
+  
   </script>
   
-  <style scoped>
-  .confirmation-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background-color: #f5f5f5;
-  }
-  
-  .confirmation-wrapper {
-    background: white;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    max-width: 400px;
-    width: 100%;
-    text-align: center;
-  }
-  
-  .confirmation-wrapper h2 {
-    margin-bottom: 20px;
-    font-size: 24px;
-    font-weight: bold;
-    color: #333;
-  }
-  
-  .confirmation-wrapper p {
-    margin: 10px 0;
-    font-size: 16px;
-  }
-  
-  .qr-code img {
-    margin-top: 20px;
-    width: 150px;
-    height: 150px;
-  }
-  
-  button {
-    margin-top: 20px;
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    font-size: 14px;
-    font-weight: bold;
-    border: none;
+  <style>
+  .button-container {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  background-color: #2b4bb3;
+  color:#fff;
+}
+
+button:hover {
+ 
+  background-color: #28b156;
+  color: white;
+}
+
+button:first-child {
+  background-color: #30d0e6; /* Couleur rouge pour le bouton retour */
+  color: white;
+}
+
+button:first-child:hover {
+  background-color: #2b4bb3; /* Effet de survol pour le bouton retour */
+}
+  #badge {
+    width: 80mm;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
     border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  button:hover {
-    background-color: #0056b3;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    text-align: center;
   }
   </style>
   
