@@ -21,7 +21,7 @@
   
   <script>
   import QRCode from "qrcode";
-  import VisitorForm from '../components/VisitorForm.vue';
+  import axios from 'axios';
   
   export default {
     name: "VisitConfirmation",
