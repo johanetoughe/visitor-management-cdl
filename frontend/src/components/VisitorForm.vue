@@ -1,34 +1,49 @@
 <template>
   <div class="background">
-    <div class="container">
+    <div class="form-container">
+      <img src="../assets/logo1.png" alt="Logo" class="logo">
       <h1>Formulaire de Visite</h1>
       <form @submit.prevent="submitForm">
-        <div>
-          <label><i class="fas fa-user"></i> Nom et prénom</label>
-          <input v-model="name" type="text" required />
-        </div>
-        <div>
-          <label><i class="fas fa-phone"></i>Téléphone</label>
-          <input v-model="tel" type="text" required />
-        </div>
-        <div>
-          <label><i class="fas fa-door-open"></i>Salle</label>
-          <select v-model="room" required>
-            <option v-for="option in rooms" :key="option" :value="option">{{ option }}</option>
-          </select>
-        </div>
-          <div>
-            <label><i class="fas fa-clock"></i>Heure de visite</label>
-            <input v-model="visitTime" type="time" required />
+        <div class="form-group">
+          <label for="name">Nom et prénom</label>
+          <div class="input-container">
+            <i class="fas fa-user"></i>
+            <input id="name" v-model="name" type="text" placeholder="Entrez votre nom complet" required />
           </div>
-        <div>
-            <label><i class="fas fa-calendar-alt"></i>Date de visite</label>
-            <input v-model="visitDate" type="date" required />
         </div>
-        <button type="submit">Envoyer</button>
+        <div class="form-group">
+          <label for="tel">Téléphone</label>
+          <div class="input-container">
+            <i class="fas fa-phone"></i>
+            <input id="tel" v-model="tel" type="text" placeholder="Entrez votre numéro" required />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="room">Salle</label>
+          <div class="input-container">
+            <i class="fas fa-door-open"></i>
+            <select id="room" v-model="room" required>
+              <option v-for="option in rooms" :key="option" :value="option">{{ option }}</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="visitTime">Heure de visite</label>
+          <div class="input-container">
+            <i class="fas fa-clock"></i>
+            <input id="visitTime" v-model="visitTime" type="time" required />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="visitDate">Date de visite</label>
+          <div class="input-container">
+            <i class="fas fa-calendar-alt"></i>
+            <input id="visitDate" v-model="visitDate" type="date" required />
+          </div>
+        </div>
+        <button type="submit" class="submit-button">Enregistrer</button>
+        <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
       </form>
-      <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
-      <p v-if="successMessage" class="success">{{ successMessage }}</p>
     </div>
   </div>
 </template>
@@ -107,88 +122,123 @@ export default {
 </script>
 
 <style scoped>
-/* Arrière-plan d'image */
+/* Arrière-plan */
 .background {
   display: flex;
-  justify-content: flex-start;  /* Aligner à gauche */
+  justify-content: center;
   align-items: center;
   height: 100vh;
-  background-image: url('../assets/display.png');
-  background-size: cover;
-  background-position: center;
-  padding-left: 20px;  /* Ajoute de l'espace à gauche */
+  font-family: 'Poppins', sans-serif;
+  background-image: url("../assets/display.png");
+  background-repeat: no-repeat;
+  background-size: cover;  /* Ajoutez cette ligne */
+  background-position: center;  /* Centrer l'image pour qu'elle soit bien alignée */
 }
 
-/* Conteneur du formulaire */
-.container {
-  background-color: white;
-  padding: 40px;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+/* Conteneur principal du formulaire */
+.form-container {
+  background-color: #ffffff;
+  padding: 30px;
+  margin-left: -145px;
+  border-radius: 15px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  max-width: 400px;
   width: 100%;
-  max-width: 500px;
-  box-sizing: border-box;
 }
 
-/* Style pour les labels avec icônes */
+/* Titre */
+h1 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #333333;
+}
+
+/* Champs du formulaire */
+.form-group {
+  margin-bottom: 15px;
+  text-align: left;
+}
+
 label {
-  font-weight: bold;
-  text-align: left;  /* Alignement à gauche */
-  margin-bottom: 5px;  /* Marge en bas pour espacer du champ */
-  display: flex; /* Utilisation de flex pour aligner l'icône avec le texte */
-  align-items: center; /* Aligne l'icône verticalement avec le texte */
+  font-size: 14px;
+  color: #333333;
+  margin-bottom: 5px;
+  display: block;
 }
 
-label i {
-  margin-right: 8px; /* Marge à droite de l'icône */
-  font-size: 18px; /* Taille de l'icône */
-}
-
-/* Pour les champs input et select */
-input, select {
-  width: 100%;
+.input-container {
+  display: flex;
+  align-items: center;
+  background-color: #f1f1f1;
+  border-radius: 10px;
   padding: 10px;
-  margin-top: 5px;
-  margin-bottom: 10px; /* Marge sous chaque champ */
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 16px;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-button {
-  width: 400px; /* Assurez-vous que la largeur est égale à celle des champs */
-  padding: 10px;
-  background: linear-gradient(to right, rgb(135,206,235), rgb(49, 182, 182)); /* Gradient du bleu clair au bleu-vert */
-  color: white;
+input,
+select {
+  flex: 1;
   border: none;
-  border-radius: 4px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background 0.3s ease; /* Transition douce lors du changement de couleur */
+  background: none;
+  font-size: 14px;
+  padding: 5px;
+  color: #555555;
+  outline: none;
 }
 
-button:hover {
-  background-color: rgb(49, 182, 182);
+input::placeholder {
+  color: #aaaaaa;
+}
+.logo {
+  max-width: 100px; /* Limite la taille du logo */
+  margin-bottom: 5px; /* Espacement entre le logo et le formulaire */
+}
+/* Icônes */
+input + i,
+select + i {
+  margin-right: 10px;
+  color: #777777;
+}
+
+/* Bouton de soumission */
+.submit-button {
+  background: linear-gradient(135deg, #80deea, #26c6da);
+  color: white;
+  padding: 10px 15px;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 10px;
+  width: 100%;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.submit-button:hover {
+  background: #00acc1;
 }
 
 /* Message d'erreur */
-.error {
+.error-message {
   color: red;
-  text-align: center;
-  font-size: 14px;
-}
-
-/* Success message */
-.success {
-  color: green;
-  text-align: center;
-  font-size: 14px;
+  font-size: 12px;
   margin-top: 10px;
 }
 
-/* Ajustement des champs d'entrée pour être plus petits sur la ligne */
-input[type="time"], input[type="date"] {
-  flex: 1;  /* S'assurer qu'ils prennent tout l'espace disponible */
-}
+/* Ajustement pour mobile */
+@media screen and (max-width: 480px) {
+  .form-container {
+    padding: 20px;
+  }
 
+  h1 {
+    font-size: 20px;
+  }
+
+  label {
+    font-size: 12px;
+  }
+}
 </style>
+
