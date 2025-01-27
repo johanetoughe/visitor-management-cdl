@@ -90,12 +90,16 @@ export default {
 
         // Envoi des données au backend
         const response = await axios.post('http://localhost:5000/api/visitors', {
-          name: this.name,
-          tel: this.tel,
-          room: this.room,
-          visitTime: this.visitTime,
-          visitDate: this.visitDate,
-        });
+            name: this.name,
+            tel: this.tel,
+            room: this.room,
+            visitTime: this.visitTime,
+            visitDate: this.visitDate,
+}, {
+  headers: {
+    'Content-Type': 'application/json',  // Assurez-vous que le type de contenu est bien spécifié
+  },
+});
 
         console.log(response.data);
 
@@ -125,21 +129,24 @@ export default {
 /* Arrière-plan */
 .background {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  font-family: 'Poppins', sans-serif;
-  background-image: url("../assets/display.png");
-  background-repeat: no-repeat;
-  background-size: cover;  /* Ajoutez cette ligne */
-  background-position: center;  /* Centrer l'image pour qu'elle soit bien alignée */
+    justify-content: center;
+    align-items: center;
+    height: 100%;  /* Prend toute la hauteur de l'écran */
+    width: 100%;   /* Prend toute la largeur de l'écran */
+    font-family: 'Poppins', sans-serif;
+    background-image: url("../assets/logindisplay.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;  /* L'image couvre tout l'écran */
+    background-position: center;  /* L'image est centrée */
+    position: absolute;  /* Assure que l'élément couvre toute la zone disponible */
+    top: 0;
+    left: 0;
 }
 
 /* Conteneur principal du formulaire */
 .form-container {
   background-color: #ffffff;
   padding: 30px;
-  margin-left: -145px;
   border-radius: 15px;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
   text-align: center;

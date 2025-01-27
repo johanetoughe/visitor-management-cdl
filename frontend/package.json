@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "axios": "^1.7.9",
+    "esc-pos-encoder": "^3.0.0",
     "escpos": "^3.0.0-alpha.6",
     "qrcode": "^1.5.4",
     "vue": "^3.5.13",
