@@ -1,5 +1,6 @@
+// models/Visitor.js
 const { DataTypes } = require('sequelize');
-const sequelize = require('../db');
+const sequelize = require('../db'); // Assurez-vous que le chemin est correct
 
 const Visitor = sequelize.define('Visitor', {
   id: {
@@ -28,9 +29,5 @@ const Visitor = sequelize.define('Visitor', {
     allowNull: false,
   },
 });
-
-sequelize.sync()
-  .then(() => console.log('Modèle synchronisé avec la base de données.'))
-  .catch(err => console.error('Erreur lors de la synchronisation :', err));
 
 module.exports = Visitor;
